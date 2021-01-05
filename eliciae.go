@@ -11,13 +11,13 @@ import (
 func main() {
 
 	// 当前目录路径
-	currentPath, _ := os.Getwd()
+	command.CurrentPath, _ = os.Getwd()
 
 	// 读取输入
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Print(currentPath, ":$ ")
+		fmt.Print(command.CurrentPath, ":$ ")
 		cmdStr, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
@@ -36,7 +36,6 @@ func runCommand(cmdStr string) error {
 
 	cmdStr = strings.TrimSuffix(cmdStr, "\r\n");
 	commandArray := strings.Fields(cmdStr)
-	fmt.Println(commandArray)
 
 	return command.DistributeCommand(commandArray)
 }

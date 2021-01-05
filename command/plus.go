@@ -7,6 +7,7 @@ import (
 	"strconv"
 )
 
+// 加法求和
 func Plus(cmdStr []string) error {
 	if len(cmdStr) < 3 {
 		return errors.New("required for 2 arguments")
