@@ -1,13 +1,40 @@
 package command
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // 查看当前工作目录路径
-func Pwd() error {
-	CurrentPath, err := os.Getwd()
-	fmt.Fprintln(os.Stdout, CurrentPath)
-	return err
+func Pwd(cmdStr []string) error {
+
+	// 帮助信息
+	helpStr := `Usage: pwd [-h]
+	Print the name of the current working directory.
+	Options:
+		-h	print pwd command help
+	`
+
+	if len(cmdStr) == 1 {
+		//CurrentPath, err := os.Getwd()
+		_, err := fmt.Fprintln(os.Stdout, CurrentPath)
+		return err
+	} else if len(cmdStr) == 2 && cmdStr[1] == "-h" {
+		_, err := fmt.Fprintln(os.Stdout, helpStr)
+		return err
+	}
+
+	// error 信息
+	errStr := "bad command syntax: "
+
+	var buffer bytes.Buffer
+	buffer.WriteString(errStr)
+	buffer.WriteString(strings.Join(cmdStr, " "))
+	buffer.WriteString("\n")
+	buffer.WriteString(helpStr)
+
+	return errors.New(buffer.String())
 }

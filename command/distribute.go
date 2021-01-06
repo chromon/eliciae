@@ -24,7 +24,10 @@ func DistributeCommand(cmdStr []string) error {
 		return sysCommand("bash", "-c", cmdStr[1:])
 	case "pwd":
 		// $ pwd
-		return Pwd()
+		return Pwd(cmdStr)
+	case "mkdir":
+		// $ mkdir t
+		// $ mkdir -p /tmp/t
 	}
 	return nil
 }
