@@ -15,7 +15,7 @@ func Pwd(cmdStr []string) error {
 	helpStr := `Usage: pwd [-h]
 	Print the name of the current working directory.
 	Options:
-		-h	print pwd command help
+		-h	display this help and exit
 	`
 
 	if len(cmdStr) == 1 {
