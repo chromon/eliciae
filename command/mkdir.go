@@ -1,6 +1,7 @@
 package command
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -29,14 +30,13 @@ func initCmd(mkdir *Mkdir) *flag.FlagSet {
 	Options:
   		-m  set file mode (as in chmod), not a=rwx - umask
   		-p  no error if existing, make parent directories as needed
-		-h  display this help and exit
-	`
+		-h  display this help and exit`
 	mkdir.helpStr = helpStr
 
 	return cmd
 }
 
-func Mkdirs(cmdStr []string) error {
+func MkdirCmd(cmdStr []string) error {
 
 	// 构建命令并初始化
 	mkdir := new (Mkdir)
@@ -45,19 +45,30 @@ func Mkdirs(cmdStr []string) error {
 
 	// 遍历实际传入的 flag
 	var err error
+	var returnVal bool
 	cmd.Visit(func(f *flag.Flag) {
 		if f.Name == "m" {
 			mkdir.mode, err = strconv.ParseUint(f.Value.String(), 10, 32)
 		} else if f.Name == "h" {
-			fmt.Fprintf(os.Stdout, mkdir.helpStr)
+			fmt.Fprintln(os.Stdout, mkdir.helpStr)
+			returnVal = true
 		}
 	})
 	if err != nil {
 		return err
 	}
 
+	// 仅输出帮助信息后返回
+	if returnVal {
+		return nil
+	}
+
 	// 目录参数
-	mkdir.directory = cmd.Args()[0]
+	if len(cmd.Args()) > 0 {
+		mkdir.directory = cmd.Args()[0]
+	} else {
+		return errors.New("mkdir: missing operand\nTry 'mkdir -h' for more information.")
+	}
 
 	if mkdir.parents {
 		// 创建多级目录

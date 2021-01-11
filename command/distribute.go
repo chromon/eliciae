@@ -27,8 +27,13 @@ func DistributeCommand(cmdStr []string) error {
 		return Pwd(cmdStr)
 	case "mkdir":
 		// $ mkdir t
+		// $ mkdir -m 0744 t
 		// $ mkdir -p /tmp/t
-		return Mkdirs(cmdStr)
+		return MkdirCmd(cmdStr)
+	case "rmdir":
+		// $ rmdir a
+		// $ rmdir -p ./a/b
+		return RmdirCmd(cmdStr)
 	}
 	return nil
 }

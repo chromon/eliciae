@@ -12,26 +12,29 @@ func Pwd(cmdStr []string) error {
 	pwd.Bool("h", false, "display this help")
 	err := pwd.Parse(cmdStr[1:])
 
-	if len(cmdStr) == 1 {
-		//CurrentPath, err := os.Getwd()
-		_, err := fmt.Fprintln(os.Stdout, CurrentPath)
-		return err
-	}
-
 	// 帮助信息
 	helpStr := `Usage: pwd [-h]
 	Print the name of the current working directory.
 	Options:
 		-h	display this help and exit`
 
+	var returnVal bool
 	pwd.Visit(func(f *flag.Flag) {
 		if f.Name == "h" {
 			_, err = fmt.Fprintln(os.Stdout, helpStr)
+			returnVal = true
 		}
 	})
 	if err != nil {
 		return err
 	}
+	// 仅输出帮助信息后返回
+	if returnVal {
+		return nil
+	}
 
-	return nil
+	// 获取当前目录
+	//CurrentPath, err := os.Getwd()
+	_, err = fmt.Fprintln(os.Stdout, CurrentPath)
+	return err
 }
