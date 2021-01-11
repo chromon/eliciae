@@ -67,11 +67,11 @@ func RmdirCmd(cmdStr []string) error {
 
 	if rmdir.parents {
 		// 删除多级目录
-		return removeDir(rmdir.directory)
+		return removeDir(CurrentPath + string(os.PathSeparator) + rmdir.directory)
 	} else {
 		// 删除单一文件夹
 		// 判断目录是否为空
-		info, err := ioutil.ReadDir(rmdir.directory)
+		info, err := ioutil.ReadDir(CurrentPath + string(os.PathSeparator) + rmdir.directory)
 		if err != nil {
 			// 目录不存在
 			return err
@@ -79,7 +79,7 @@ func RmdirCmd(cmdStr []string) error {
 
 		if len(info) == 0 {
 			// 目录为空，删除
-			os.RemoveAll(rmdir.directory)
+			os.RemoveAll(CurrentPath + string(os.PathSeparator) + rmdir.directory)
 		} else {
 			// 目录不为空无法删除
 			errStr := fmt.Sprintf("rmdir: failed to remove '%s': Directory not empty", rmdir.directory)
@@ -105,7 +105,7 @@ func removeDir(path string) error {
 
 		// 判断是否是最终目录
 		s := filepath.Dir(path)
-		if s == "." || s == "./" || s == "/" {
+		if s == CurrentPath {
 			return nil
 		}
 

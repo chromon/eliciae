@@ -72,13 +72,13 @@ func MkdirCmd(cmdStr []string) error {
 
 	if mkdir.parents {
 		// 创建多级目录
-		err = os.MkdirAll(mkdir.directory, os.FileMode(mkdir.mode))
+		err = os.MkdirAll(CurrentPath + string(os.PathSeparator) + mkdir.directory, os.FileMode(mkdir.mode))
 		if err != nil {
 			return err
 		}
 	} else {
 		// 创建单一文件夹
-		err = os.Mkdir(mkdir.directory, os.FileMode(mkdir.mode))
+		err = os.Mkdir(CurrentPath + string(os.PathSeparator) + mkdir.directory, os.FileMode(mkdir.mode))
 		if err != nil {
 			return err
 		}
