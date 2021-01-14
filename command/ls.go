@@ -77,7 +77,6 @@ func LsCmd(cmdStr []string) error {
 	var err error
 	var returnVal bool
 	var isList bool
-	var isAll bool
 	cmd.Visit(func(f *flag.Flag) {
 		switch f.Name {
 		case "l":
@@ -85,7 +84,7 @@ func LsCmd(cmdStr []string) error {
 			isList = true
 		case "a":
 			// ls -a 列出目录所有文件，包含以.开始的隐藏文件
-			isAll = true
+			fileInfList = addAll(fileInfList)
 		case "t":
 			// ls -t 以文件修改时间排序
 			sort.Slice(fileInfList, func(i, j int) bool {
@@ -105,7 +104,7 @@ func LsCmd(cmdStr []string) error {
 		return err
 	}
 
-	traverse(fileInfList, isList, isAll)
+	traverse(fileInfList, isList)
 	return nil
 }
 
@@ -122,7 +121,10 @@ func queryFileInf(fileList []os.FileInfo) FileInfList {
 		}
 		fileInfList = append(fileInfList, *fileInf)
 	}
+	return fileInfList
+}
 
+func addAll(fileInfList FileInfList) FileInfList {
 	file1, _ := os.Stat(".")
 	fileInf1 := &FileInf{
 		file1.Mode(),
@@ -147,16 +149,9 @@ func queryFileInf(fileList []os.FileInfo) FileInfList {
 	return fileInfList
 }
 
-func traverse(fileInfList FileInfList, isList, isAll bool) {
+func traverse(fileInfList FileInfList, isList bool) {
 
-	var i int
-	if isAll {
-		i = 0
-	} else {
-		i = 2
-	}
-
-	for ; i < len(fileInfList); i++ {
+	for i := 0; i < len(fileInfList); i++ {
 		var build strings.Builder
 		if isList {
 			build.WriteString(fileInfList[i].mode.String())
