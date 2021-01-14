@@ -34,6 +34,12 @@ func DistributeCommand(cmdStr []string) error {
 		// $ rmdir a
 		// $ rmdir -p ./a/b
 		return RmdirCmd(cmdStr)
+	case "cd":
+		// $ cd a
+		// $ cd /a/b
+		return CdCmd(cmdStr)
+	case "ls":
+		return LsCmd(cmdStr)
 	}
 	return nil
 }

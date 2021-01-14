@@ -12,7 +12,6 @@ func main() {
 
 	// 当前目录路径
 	command.CurrentPath, _ = os.Getwd()
-	//command.CurrentPath = command.CurrentPath + string(os.PathSeparator)
 
 	// 读取输入
 	reader := bufio.NewReader(os.Stdin)
